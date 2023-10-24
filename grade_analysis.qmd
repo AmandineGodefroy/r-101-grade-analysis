@@ -79,8 +79,17 @@ ggplot(grades, aes(x = Exam, y=Group, fill = Group)) +
 # Question 8
 
 ```{r}
-grades %>%
+na_exam_per_group <- grades %>%
   group_by(Group) %>%
   summarise(nber_na_exam = sum(is.na(Exam)))
+
+knitr::kable(na_exam_per_group)
+```
+# Question 9
+
+```{r}
+all_Groups <- inner_join(grades, na_exam_per_group, by=join_by(Group))
+
+ggplot(all_Groups, aes(x = Group, y = nber_na_exam ))+geom_col()
 ```
 
