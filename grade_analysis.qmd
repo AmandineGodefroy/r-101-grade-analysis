@@ -90,6 +90,16 @@ knitr::kable(na_exam_per_group)
 ```{r}
 all_Groups <- inner_join(grades, na_exam_per_group, by=join_by(Group))
 
-ggplot(all_Groups, aes(x = Group, y = nber_na_exam ))+geom_col()
+ggplot(all_Groups, aes(x = Group, y = nber_na_exam)) +
+  geom_col()
+```
+# Question 10
+
+```{r}
+new_grades <- grades %>% pivot_longer(
+  cols = Exam | starts_with("MCQ_") | starts_with("Online_MCQ_"),
+  names_to = "name",
+  values_to = "value"
+)
 ```
 
