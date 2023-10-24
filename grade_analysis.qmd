@@ -134,3 +134,13 @@ na_exam_per_group2 <- exam_new_grades %>% group_by(Group) %>%
 knitr::kable(na_exam_per_group2)
 ```
 
+# Question 14
+
+```{r}
+online_test_new_grades <- new_grades |> filter(str_starts(name, "Online_MCQ_"))
+
+na_online_test_per_student <- online_test_new_grades %>%
+  group_by(Id) %>%
+  summarise(nber_na_online_test = sum(is.na(value)))
+```
+
