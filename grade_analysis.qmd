@@ -56,3 +56,23 @@ nber_stdts_group <- grades |> count(Group) |> group_by(Group)
 knitr::kable(nber_stdts_group)
 ```
 
+# Question 6
+
+```{r}
+grades |> ggplot(aes(x = Group, fill = Group)) +
+  geom_bar()
+```
+# Question 7
+
+```{r}
+ggplot(grades, aes(x = Exam, fill = Group)) +
+  geom_histogram(bins = 20) +
+  geom_rug(alpha = 0.03, linewidth = 1.5) +
+  facet_wrap(~Group)
+```
+
+```{r}
+ggplot(grades, aes(x = Exam, y=Group, fill = Group)) +
+  geom_boxplot()
+```
+
