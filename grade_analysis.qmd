@@ -13,6 +13,7 @@ library(vroom)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
+library(stringr)
 ```
 
 # Question 1
@@ -119,5 +120,17 @@ ggplot(na_exam_per_student, aes(x = nber_na_grades )) + geom_histogram()
 ```
 ```{r}
 ggplot(na_exam_per_student, aes(x = nber_na_grades))+ geom_density(bw = "SJ") + labs(title = "distribution of the number of missing grades per student")
+```
+
+# Question 13
+
+```{r}
+
+exam_new_grades <- new_grades |> filter(str_starts(name, "Exam"))
+
+na_exam_per_group2 <- exam_new_grades %>% group_by(Group) %>%
+  summarise(nber_na_exam2 = sum(is.na(value)))
+
+knitr::kable(na_exam_per_group2)
 ```
 
