@@ -76,3 +76,11 @@ ggplot(grades, aes(x = Exam, y=Group, fill = Group)) +
   geom_boxplot()
 ```
 
+# Question 8
+
+```{r}
+grades %>%
+  group_by(Group) %>%
+  summarise(nber_na_exam = sum(is.na(Exam)))
+```
+
