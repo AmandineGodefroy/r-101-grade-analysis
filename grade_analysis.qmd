@@ -34,7 +34,7 @@ knitr::kable(stats_exam)
 # Question 3
 
 ```{r}
-no_exam <- grades |> count(Exam=="NA")
+no_exam <- grades |> count(is.na(Exam))
 ```
 There are `r no_exam[2,2]` students who did not take the exam.
 
@@ -42,7 +42,9 @@ There are `r no_exam[2,2]` students who did not take the exam.
 
 Graphical representation of the distribution of grades at the exam.
 ```{r}
-grades |> ggplot(aes(x = Exam)) +
-  geom_bar()
+Exam_woNA <- grades |> filter(!is.na(Exam))
+
+Exam_woNA |> ggplot(aes(x = Exam)) +
+  geom_histogram(binwidth = 0.5)
 ```
 
