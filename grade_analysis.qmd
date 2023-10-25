@@ -61,7 +61,7 @@ knitr::kable(nber_stdts_group)
 
 ```{r}
 grades |> ggplot(aes(x = Group, fill = Group)) +
-  geom_bar()
+  geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 # Question 7
 
@@ -142,5 +142,58 @@ online_test_new_grades <- new_grades |> filter(str_starts(name, "Online_MCQ_"))
 na_online_test_per_student <- online_test_new_grades %>%
   group_by(Id) %>%
   summarise(nber_na_online_test = sum(is.na(value)))
+
+knitr::kable(na_online_test_per_student)
 ```
 
+# Question 15
+```{r}
+grades_with_na_online_test <- inner_join(grades, na_online_test_per_student, by = join_by(Id))
+```
+
+```{r}
+exam_vs_missing_online <- new_grades %>%
+  rowwise() %>%
+  mutate(Missing_Online = sum(c_across(starts_with("Online_MCQ_")), na.rm = TRUE)) %>%
+  group_by(Missing_Online) %>%
+  summarise(Average_Exam_Grade = mean(Exam, na.rm = TRUE))
+
+ggplot(exam_vs_missing_online, aes(x = factor(Missing_Online), y = Average_Exam_Grade)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(
+    title = "Average Exam Grade Conditioned by Missing Online Test Grades",
+    x = "Missing Online Test Grades",
+    y = "Average Exam Grade"
+  ) +
+  scale_x_discrete(labels = seq(0, max(exam_vs_missing_online$Missing_Online), 1))
+```
+Represent graphically the distribution of the grades at the Exam conditioned by the number of missing grades for the online tests. Notice that this cannot be done directly using the table
+obtained in the previous question. 
+
+It is recommended to use the row-wise functionality of dplyr to perform the calculations needed for this question, starting with the original data frame (not the long format one) and leveraging the c_across function. In this approach, columns can be selected with the
+starts_with function. 
+```{r}
+grades_with_na_online_test <- grades |>
+  rowwise() |>
+  mutate(na_online_test_per_student2 = sum(is.na(c_across(starts_with("Online_MCQ_")))))
+```
+
+```{r}
+# Alternative :
+grades_with_na_online_test2 <- inner_join(grades, na_online_test_per_student, by = join_by(Id))
+```
+
+```{r}
+grades_with_na_online_test |> ggplot(aes(x = Exam, fill = na_online_test_per_student2, color = na_online_test_per_student2)) + geom_histogram()
+```
+```{r}
+grades_with_na_online_test |> ggplot(aes(x = Exam, group = na_online_test_per_student2, color = na_online_test_per_student2))+ geom_density(bw = "SJ")
+```
+```{r}
+ggplot(grades_with_na_online_test, aes(x = Exam, y=na_online_test_per_student2, fill = na_online_test_per_student2)) +
+  geom_boxplot()
+```
+```{r}
+ggplot(grades_with_na_online_test, aes(x = Exam, fill = na_online_test_per_student2, color = na_online_test_per_student2)) +
+  geom_bar() 
+```
