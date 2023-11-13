@@ -159,17 +159,7 @@ grades_with_na_online_test <- grades |>
 grades_with_na_online_test2 <- inner_join(grades, na_online_test_per_student, by = join_by(Id))
 ```
 
-Graphical représentation 
-```{r}
-grades_with_na_online_test |> ggplot(aes(x = Exam, fill = na_online_test_per_student2, color = na_online_test_per_student2)) + geom_histogram()
-```
-```{r}
-grades_with_na_online_test |> ggplot(aes(x = Exam, group = na_online_test_per_student2, color = na_online_test_per_student2))+ geom_density(bw = "SJ")
-```
-```{r}
-ggplot(grades_with_na_online_test, aes(x = Exam, y=na_online_test_per_student2, fill = na_online_test_per_student2)) +
-  geom_boxplot()
-```
+Graphical representation 
 ```{r}
 ggplot(grades_with_na_online_test, aes(x = Exam, fill = na_online_test_per_student2, color = na_online_test_per_student2)) +
   geom_bar() 
@@ -227,6 +217,8 @@ exam_per_group_2 <- inner_join(exam_per_group, nber_stdts_group, by = join_by(Gr
 mean_exam_per_group <- exam_per_group_2 |> group_by(Group) |> mutate(mean_exam = sum(Exam, na.rm=T)/n_students)
 
 mean_exam_per_group2 <- mean_exam_per_group |> select(Group, mean_exam)
+
+#pour selectionner lignes uniques ? |> slice(Group, 1,21,32,47,64,82,99,116,132,152,171,189,203,223,243,261,281,300,320,335,350,363,383,401)
 ```
 
 ```{r}
